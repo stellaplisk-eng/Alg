@@ -1,0 +1,5 @@
+// Пример кода хеш-таблицы на Java:
+
+import java.util.HashMap;
+
+HashMap<String, Integer> ageMap = new HashMap<>();
