@@ -1,0 +1,346 @@
+//Сортировка выбором 
+#include <iostream> // подключение библиотеки для ввода-вывода
+
+// функция для выполнения сортировки выбором
+void selectionSort(int arr[], int size) {
+    for (int i = 0; i < size - 1; i++) { // внешний цикл: пробегает по всему массиву, кроме последнего элемента
+        int min_idx = i; // предполагаемый индекс минимального элемента в текущем диапазоне
+
+        // внутренний цикл ищет минимальный элемент в неотсортированной части массива
+        for (int j = i + 1; j < size; j++) {
+            if (arr[j] < arr[min_idx]) { // если текущий элемент меньше текущего минимума
+                min_idx = j; // обновляем индекс минимума
+            }
+        }
+
+        // обмен элементов: меняем местами текущий элемент и найденный минимум
+        int temp = arr[i];
+        arr[i] = arr[min_idx];
+        arr[min_idx] = temp;
+    }
+}
+
+int main() {
+    int arr[] = {64, 25, 12, 22, 11}; // пример массива для сортировки
+    int size = sizeof(arr) / sizeof(arr[0]); // расчет количества элементов массива
+
+    std::cout << "Исходный массив: ";
+    for (int i = 0; i < size; i++) {
+        std::cout << arr[i] << " ";
+    }
+    std::cout << std::endl;
+
+    // вызов функции сортировки выбором
+    selectionSort(arr, size);
+
+    std::cout << "Отсортированный массив: ";
+    for (int i = 0; i < size; i++) {
+        std::cout << arr[i] << " ";
+    }
+    std::cout << std::endl;
+
+    return 0; // завершение программы
+}
+
+//Сортировка вставками 
+#include <iostream> // подключение библиотеки для ввода-вывода
+
+// функция для выполнения сортировки вставками
+void insertionSort(int arr[], int size) {
+    // начинаем с второго элемента, поскольку один в начале — уже считается отсортированным
+    for (int i = 1; i < size; i++) {
+        int key = arr[i]; // текущий элемент, который мы вставляем в отсортированную часть
+        int j = i - 1; // индекс элемента, с которого начинаем сравнивать
+
+        // сдвигаем элементы, которые больше key, вправо
+        while (j >= 0 && arr[j] > key) {
+            arr[j + 1] = arr[j]; // сдвигаем элемент вправо
+            j--; // шаг назад по массиву
+        }
+        arr[j + 1] = key; // вставляем key на правильную позицию
+    }
+}
+
+int main() {
+    int arr[] = {64, 25, 12, 22, 11}; // пример массива для сортировки
+    int size = sizeof(arr) / sizeof(arr[0]); // определение количества элементов массива
+
+    // вывод исходного массива
+    std::cout << "Исходный массив: ";
+    for (int i = 0; i < size; i++) {
+        std::cout << arr[i] << " ";
+    }
+    std::cout << std::endl;
+
+    // вызов функции сортировки вставками
+    insertionSort(arr, size);
+
+    // вывод отсортированного массива
+    std::cout << "Отсортированный массив: ";
+    for (int i = 0; i < size; i++) {
+        std::cout << arr[i] << " ";
+    }
+    std::cout << std::endl;
+
+    return 0; // завершение программы
+}
+ //Сортировка слиянием 
+#include <iostream> // для вывода в консоль
+
+// Функция для слияния двух отсортированных частей массива
+void merge(int arr[], int left, int mid, int right) {
+    int n1 = mid - left + 1; // размер левой части
+    int n2 = right - mid; // размер правой части
+
+    // Временные массивы для хранения разделённых частей
+    int* L = new int[n1];
+    int* R = new int[n2];
+
+    // Копируем данные в временные массивы
+    for (int i = 0; i < n1; i++)
+        L[i] = arr[left + i];
+    for (int j = 0; j < n2; j++)
+        R[j] = arr[mid + 1 + j];
+
+    int i = 0; // индекс для массива L
+    int j = 0; // индекс для массива R
+    int k = left; // индекс для исходного массива
+
+    // Сливаем массивы обратно в arr
+    while (i < n1 && j < n2) {
+        if (L[i] <= R[j]) {
+            arr[k] = L[i];
+            i++;
+        } else {
+            arr[k] = R[j];
+            j++;
+        }
+        k++;
+    }
+
+    // Копируем оставшиеся элементы массива L, если есть
+    while (i < n1) {
+        arr[k] = L[i];
+        i++;
+        k++;
+    }
+
+    // Копируем оставшие элементы массива R, если есть
+    while (j < n2) {
+        arr[k] = R[j];
+        j++;
+        k++;
+    }
+
+    delete[] L;
+    delete[] R;
+}
+
+// Рекурсивная функция сортировки слиянием
+void mergeSort(int arr[], int left, int right) {
+    if (left < right) {
+        int mid = left + (right - left) / 2; // находим среднюю точку
+
+        // сортируем первую и вторую половины
+        mergeSort(arr, left, mid);
+        mergeSort(arr, mid + 1, right);
+
+        // сливаем отсортированные половины
+        merge(arr, left, mid, right);
+    }
+}
+
+int main() {
+    int arr[] = {64, 25, 12, 22, 11}; // пример массива
+    int size = sizeof(arr) / sizeof(arr[0]);
+
+    // Вывод исходного массива
+    std::cout << "Исходный массив: ";
+    for (int i = 0; i < size; i++) {
+        std::cout << arr[i] << " ";
+    }
+    std::cout << std::endl;
+
+    // Вызов функции сортировки слиянием
+    mergeSort(arr, 0, size - 1);
+
+    // Вывод отсортированного массива
+    std::cout << "Отсортированный массив: ";
+    for (int i = 0; i < size; i++) {
+        std::cout << arr[i] << " ";
+    }
+    std::cout << std::endl;
+
+    return 0;
+}
+
+//Пирамидная сортировка 
+#include <iostream>
+#include <vector>
+
+// Функция для "подъема" элемента вверх, чтобы сохранить свойство кучи
+void heapify(std::vector<int>& arr, int n, int i) {
+    int largest = i;            // Изначально предполагаем, что корень — самый большой элемент
+    int left = 2 * i + 1;       // Левый потомок в дереве
+    int right = 2 * i + 2;      // Правый потомок
+
+    // Проверяем, есть ли левый потомок и больше ли он текущего "большого" эле-мента
+    if (left < n && arr[left] > arr[largest]) {
+        largest = left;
+    }
+
+    // Проверяем правого потомка
+    if (right < n && arr[right] > arr[largest]) {
+        largest = right;
+    }
+
+    // Если наш корень (i) не самый большой, меняем их местами
+    if (largest != i) {
+        std::swap(arr[i], arr[largest]);   // Обмен элементов
+        heapify(arr, n, largest);          // Рекурсивно вызываем для поддерева
+    }
+}
+
+// Функция для построения кучи из неотсортированного массива
+void buildHeap(std::vector<int>& arr, int n) {
+    // Начинаем с последнего внутреннего узла и вызываем heapify по нему вверх
+    for (int i = n / 2 - 1; i >= 0; i--) {
+        heapify(arr, n, i);
+    }
+}
+
+// Основная функция пирамидальной сортировки
+void heapSort(std::vector<int>& arr) {
+    int n = arr.size();
+
+    buildHeap(arr, n);  // Шаг 1: Построение кучи
+
+    // Один за другим извлекаем элементы из кучи
+    for (int i = n - 1; i > 0; i--) {
+        std::swap(arr[0], arr[i]);   // Помещаем корень (максимальный) в конец массива
+        heapify(arr, i, 0);          // Восстанавливаем свойство кучи для уменьшенной части
+    }
+}
+
+int main() {
+    // Пример массива для сортировки
+    std::vector<int> data = {38, 27, 43, 3, 9, 82, 10};
+
+    // Выводим исходный массив
+    std::cout << "Исходный массив: ";
+    for (int num : data) {
+        std::cout << num << " ";
+    }
+    std::cout << std::endl;
+
+    // Выполняем сортировку
+    heapSort(data);
+
+    // Выводим отсортированный массив
+    std::cout << "Отсортированный массив: ";
+    for (int num : data) {
+        std::cout << num << " ";
+    }
+    std::cout << std::endl;
+
+    return 0;
+}
+
+//Последовательный поиск 
+#include <iostream>
+#include <vector>
+
+// Функция для последовательного поиска элемента в массиве
+// Возвращает индекс элемента, если найден, или -1, если нет
+int linearSearch(const std::vector<int>& arr, int target) {
+    // Перебираем каждый элемент массива
+    for (size_t i = 0; i < arr.size(); i++) {
+        // Проверяем, совпадает ли текущий элемент с искомым
+        if (arr[i] == target) {
+            return i; // Возвращаем индекс найденного элемента
+        }
+    }
+    return -1; // Если элемент не найден, возвращаем -1
+}
+
+int main() {
+    // Пример массива для поиска
+    std::vector<int> data = {38, 27, 43, 3, 9, 82, 10};
+    int target = 9; // Элемент, который ищем
+
+    // Выводим исходный массив
+    std::cout << "Массив: ";
+    for (int num : data) {
+        std::cout << num << " ";
+    }
+    std::cout << std::endl;
+
+    // Выполняем последовательный поиск
+    int index = linearSearch(data, target);
+
+    // Выводим результат поиска
+    if (index != -1) {
+        std::cout << "Элемент " << target << " найден по индексу: " << index << std::endl;
+    } else {
+        std::cout << "Элемент " << target << " не найден в массиве." << std::endl;
+    }
+
+    return 0;
+}
+
+//Интерполирующий поиск 
+#include <iostream>
+#include <vector>
+
+// Функция интерполяционного поиска
+int interpolationSearch(const std::vector<int>& arr, int target) {
+    int low = 0;                              // Левая граница поиска
+    int high = arr.size() - 1;                // Правая граница поиска
+
+    while (low <= high && target >= arr[low] && target <= arr[high]) {
+        if (low == high) {
+            // Если границы совпадают, проверяем последний элемент
+            if (arr[low] == target) return low;
+            else return -1;
+        }
+
+        // Предсказываем позицию искомого элемента
+        int pos = low + ((double)(high - low) / (arr[high] - arr[low])) * (target - arr[low]);
+
+        // Проверяем значение по вычисленной позиции
+        if (pos < low || pos > high) {
+            return -1; // Позиция вне диапазона, элемент отсутствует
+        }
+
+        if (arr[pos] == target) {
+            return pos; // Элемент найден
+        } else if (arr[pos] < target) {
+            low = pos + 1; // Искомый элемент в правой части
+        } else {
+            high = pos - 1; // Искомый элемент в левой части
+        }
+    }
+    return -1; // Элемент не найден
+}
+
+int main() {
+    // Пример отсортированного массива
+    std::vector<int> data = {3, 9, 10, 27, 38, 43, 82};
+    int target = 9;
+
+    std::cout << "Массив: ";
+    for (int num : data) {
+        std::cout << num << " ";
+    }
+    std::cout << std::endl;
+
+    int index = interpolationSearch(data, target);
+    if (index != -1) {
+        std::cout << "Элемент " << target << " найден по индексу: " << index << std::endl;
+    } else {
+        std::cout << "Элемент " << target << " не найден в массиве." << std::endl;
+    }
+
+    return 0;
+}
+
