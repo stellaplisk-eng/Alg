@@ -1,5 +1,0 @@
-# Пример кода хеш-таблицы на Python:
-
-import hashlib
-
-hash_object = hashlib.sha256()
