@@ -1,173 +1,20 @@
-#Сортировка обменом
-def bubble_sort(arr):
-    n = len(arr)
-    # Внешний цикл — перебираем все элементы
-    for i in range(n):
-        swapped = False  # флаг для отслеживания обменов
-        # Внутренний цикл — сравниваем соседние элементы
-        for j in range(0, n - i - 1):
-            # Если текущий элемент больше следующего
-            if arr[j] > arr[j + 1]:
-                arr[j], arr[j + 1] = arr[j + 1], arr[j]  # меняем местами
-                swapped = True  # отмечаем, что обмен был
-        # Если за проход не было обменов, массив уже отсортирован
-        if not swapped:
-            break
+#Python 
+#2.1. 
+def gcd(a, b):
+    if b == 0:
+        return a
+    return gcd(b, a % b)
 
-# Пример использования
-if __name__ == "__main__":
-    data = [64, 34, 25, 12, 22, 11, 90]
-    print("Исходный массив:", data)
-    bubble_sort(data)
-    print("Отсортированный массив:", data)
+numbers = [(48, 18), (56, 42), (17, 13), (100, 25), (0, 5)]
 
-#Сортировка Шелла 
-def shell_sort(arr):
-    n = len(arr)
-    gap = n // 2  # Изначальный интервал (gap), начинаем с половины длины массива
+print("Результаты работы функции:")
+for a, b in numbers:
+    result = gcd(a, b)
+    print(f"НОД({a}, {b}) = {result}")
 
-    # Пока интервал больше нуля
-    while gap > 0:
-        # Проходим по массиву, начиная с индекса gap
-        for i in range(gap, n):
-            temp = arr[i]
-            j = i
-            # сравниваем элементы, которые находятся на расстоянии gap друг от друга
-            while j >= gap and arr[j - gap] > temp:
-                arr[j] = arr[j - gap]
-                j -= gap
-            arr[j] = temp
-        gap //= 2  # уменьшаем интервал в два раза
-
-# Пример использования:
-if __name__ == "__main__":
-    data = [38, 27, 43, 3, 9, 82, 10]
-    print("Исходный массив:", data)
-
-    shell_sort(data)  # вызов функции сортировки
-    print("Отсортированный массив:", data)
-#Быстрая сортировка 
-def quick_sort(arr):
-    """
-    Быстрая сортировка с рекурсивным разбиением массива.
-    """
-    if len(arr) <= 1:
-        return arr  # базовый случай: массив из 1 элемента или пустой уже отсортирован
-
-    pivot = arr[len(arr) // 2]  # выбираем опорный элемент — середина массива
-    left = []   # элементы меньше опорного
-    middle = [] # элементы равные опорному
-    right = []  # элементы больше опорного
-
-    # Разделяем элементы массива на три части
-    for x in arr:
-        if x < pivot:
-            left.append(x)   # меньшие
-        elif x == pivot:
-            middle.append(x) # равные
-        else:
-            right.append(x)  # большие
-
-    # Рекурсивно сортируем левую и правую части, соединяем с центральной
-    return quick_sort(left) + middle + quick_sort(right)
-
-#Бинарный поиск 
-# Пример использования:
-if __name__ == "__main__":
-    data = [38, 27, 43, 3, 9, 82, 10]
-    print("Исходный массив:", data)
-
-    sorted_data = quick_sort(data)
-    print("Отсортированный массив:", sorted_data)
-
-def binary_search(arr, target):
-    """
-    Выполняет бинарный поиск в отсортированном массиве arr
-    Возвращает индекс элемента, равного target, или -1, если не найден.
-    """
-    left = 0                      # Левая граница поиска
-    right = len(arr) - 1          # Правая граница поиска
-    
-    while left <= right:
-        middle = (left + right) // 2  # Находим середину диапазона
-        # Проверяем, равно ли серединное значение искомому
-        if arr[middle] == target:
-            return middle  # Элемент найден, возвращаем индекс
-        elif arr[middle] < target:
-            left = middle + 1  # Искомый элемент в правой части
-        else:
-            right = middle - 1 # Искомый элемент в левой части
-    return -1  # Элемент не найден за время поиска
-
-# Пример использования
-if __name__ == "__main__":
-    data = [3, 9, 10, 27, 38, 43, 82]
-    target = 9
-
-    print("Массив:", data)
-    index = binary_search(data, target)
-    if index != -1:
-        print(f"Элемент {target} найден по индексу: {index}")
-    else:
-        print(f"Элемент {target} не найден в массиве.")
-
-#Поиск по Фибоначчи 
-def fibonacci_search(arr, target):
-    """
-    Выполняет поиск элемента target в отсортированном массиве arr методом поиска по Фибоначчи.
-    Возвращает индекс элемента или -1, если элемент не найден.
-    """
-    n = len(arr)
-    
-    # Сначала ищем самое большое число Фибоначчи, не превышающее размер массива
-    fibMMm2 = 0  # (m-2)-ое число Фибоначчи
-    fibMMm1 = 1  # (m-1)-ое число Фибоначчи
-    fibM = fibMMm2 + fibMMm1  # m-ое число Фибоначчи
-    
-    # Генерируем числа Фибоначчи, пока не превысим длину массива
-    while fibM < n:
-        fibMMm2 = fibMMm1
-        fibMMm1 = fibM
-        fibM = fibMMm2 + fibMMm1
-    
-    # Начальная точка
-    offset = -1
-    
-    # Пока есть элементы для проверки
-    while fibM > 1:
-        # Вычисляем индекс для сравнения
-        i = min(offset + fibMMm2, n - 1)
-        
-        # Если элемент в позиции i меньше искомого
-        if arr[i] < target:
-            # Продолжаем в правой части
-            fibM = fibMMm1
-            fibMMm1 = fibMMm2
-            fibMMm2 = fibM - fibMMm1
-            offset = i
-        # Если элемент равен target — возвращаем индекс
-        elif arr[i] == target:
-            return i
-        # Если элемент больше — ищем слева
-        else:
-            fibM = fibMMm2
-            fibMMm1 = fibMMm1 - fibMMm2
-            fibMMm2 = fibM - fibMMm1
-    
-    # Проверка следующего элемента
-    if fibMMm1 and offset + 1 < n and arr[offset + 1] == target:
-        return offset + 1
-    # Элемент не найден
-    return -1
-
-# Пример использования
-if __name__ == "__main__":
-    data = [1, 3, 5, 8, 13, 21, 34, 55]
-    target = 21
-    print("Массив:", data)
-    index = fibonacci_search(data, target)
-    if index != -1:
-        print(f"Элемент {target} найден по индексу: {index}")
-    else:
-        print(f"Элемент {target} не найден в массиве.")
-
+Результаты работы функции:
+НОД(48, 18) = 6
+НОД(56, 42) = 14
+НОД(17, 13) = 1
+НОД(100, 25) = 25
+НОД(0, 5) = 5
